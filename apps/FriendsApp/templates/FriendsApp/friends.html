@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>Friends</title>
+  </head>
+  <body>
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <a href="/logout">Log Out</a>
+    <h1>Hello, {{logged_in_user.alias}}!</h1>
+    <h1>Here is the list of your friends:</h1>
+    {% if not friends %}
+    <p>You don't have any friends...yet.</p>
+    {% else %}
+    <table>
+      <tr>
+        <td>Alias</td>
+        <td>Action</td>
+      </tr>
+      {% for person in friends %}
+      <tr>
+        <td>{{person.alias}}</td>
+        <td><a href="/user/{{person.id}}">View Profile</a>  <a href="/remove/{{person.id}}">Remove as Friend</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+    <h1>Other users not on your friends list:</h1>
+    {% if not_friends %}
+    <table>
+      <tr>
+        <td>Alias</td>
+        <td>Action</td>
+      </tr>
+      {% for person in not_friends %}
+      <tr>
+        <td><a href="/user/{{person.id}}">{{person.alias}}</a></td>
+        <td><form action="/add/{{person.id}}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="Add as Friend">
+        </form></td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+  </body>
+</html>
